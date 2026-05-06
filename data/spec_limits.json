@@ -1,0 +1,62 @@
+{
+  "tx_optical_power_dBm": {
+    "LSL": -1.0,
+    "USL": 3.0,
+    "target": 1.0
+  },
+  "rx_sensitivity_dBm": {
+    "LSL": -22.0,
+    "USL": -14.0,
+    "target": -18.0
+  },
+  "pre_fec_ber": {
+    "LSL": 0,
+    "USL": 0.0045,
+    "target": 0.0001
+  },
+  "extinction_ratio_dB": {
+    "LSL": 4.0,
+    "USL": 15.0,
+    "target": 8.5
+  },
+  "osnr_dB": {
+    "LSL": 28.0,
+    "USL": 45.0,
+    "target": 36.0
+  },
+  "laser_bias_current_mA": {
+    "LSL": 15.0,
+    "USL": 80.0,
+    "target": 40.0
+  },
+  "wavelength_offset_pm": {
+    "LSL": -12.5,
+    "USL": 12.5,
+    "target": 0.0
+  },
+  "tdecq_dB": {
+    "LSL": 0.5,
+    "USL": 3.5,
+    "target": 2.0
+  },
+  "module_power_W": {
+    "LSL": 10.0,
+    "USL": 30.0,
+    "target": 20.0
+  },
+  "insertion_loss_dB": {
+    "LSL": 0.5,
+    "USL": 3.5,
+    "target": 1.8
+  },
+  "eye_margin_pct": {
+    "LSL": 15.0,
+    "USL": 95.0,
+    "target": 65.0
+  },
+  "dsp_lock_time_ms": {
+    "LSL": 5.0,
+    "USL": 500.0,
+    "target": 80.0
+  }
+}
