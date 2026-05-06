@@ -116,8 +116,9 @@ def load_data():
 
     # Auto-generate if missing (Streamlit Cloud won't have the CSV)
     if not os.path.exists(csv_path):
+        import sys
         import subprocess
-        subprocess.run(["python", os.path.join(base, "data", "generate_data.py")], check=True)
+        subprocess.run([sys.executable, os.path.join(base, "data", "generate_data.py")], check=True)
 
     df = pd.read_csv(csv_path, parse_dates=["test_datetime"])
     equip = pd.read_csv(os.path.join(base, "data", "equipment_registry.csv"))
