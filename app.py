@@ -112,7 +112,14 @@ st.markdown("""
 @st.cache_data
 def load_data():
     base = os.path.dirname(os.path.abspath(__file__))
-    df = pd.read_csv(os.path.join(base, "data", "optics_test_data.csv"), parse_dates=["test_datetime"])
+    csv_path = os.path.join(base, "data", "optics_test_data.csv")
+
+    # Auto-generate if missing (Streamlit Cloud won't have the CSV)
+    if not os.path.exists(csv_path):
+        import subprocess
+        subprocess.run(["python", os.path.join(base, "data", "generate_data.py")], check=True)
+
+    df = pd.read_csv(csv_path, parse_dates=["test_datetime"])
     equip = pd.read_csv(os.path.join(base, "data", "equipment_registry.csv"))
     targets = pd.read_csv(os.path.join(base, "data", "yield_targets.csv"))
     with open(os.path.join(base, "data", "spec_limits.json")) as f:
