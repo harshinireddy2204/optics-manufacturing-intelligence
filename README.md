@@ -7,6 +7,8 @@
 ![Plotly](https://img.shields.io/badge/Plotly-Interactive-green)
 ![SPC](https://img.shields.io/badge/Six_Sigma-SPC/Cpk-orange)
 
+**Live Demo**: https://optics-manufacturing-intelligence.streamlit.app/
+
 ---
 
 ## Why This Project Exists
