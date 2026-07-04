@@ -1,30 +1,31 @@
 equipment_id,equipment_type,manufacturing_line,test_station,last_calibration,calibration_due,status,firmware_version
-EQ-1000,WaferTest_Unit_1,Line-A-Maynard,WaferTest,2025-11-26,2026-06-18,Needs Calibration,v2.5.1
-EQ-1001,WaferTest_Unit_2,Line-A-Maynard,WaferTest,2026-03-24,2026-09-04,Active,v4.6.18
-EQ-1002,OpticalAlignment_Unit_1,Line-A-Maynard,OpticalAlignment,2026-01-13,2026-06-23,Active,v2.4.2
-EQ-1003,OpticalAlignment_Unit_2,Line-A-Maynard,OpticalAlignment,2026-04-26,2026-06-25,Active,v4.0.19
-EQ-1004,OpticalAlignment_Unit_3,Line-A-Maynard,OpticalAlignment,2026-03-09,2026-08-14,Active,v3.0.1
-EQ-1005,ModuleParametric_Unit_1,Line-A-Maynard,ModuleParametric,2026-01-11,2026-05-10,Active,v2.7.5
-EQ-1006,ModuleParametric_Unit_2,Line-A-Maynard,ModuleParametric,2025-12-28,2026-07-01,Active,v3.8.19
-EQ-1007,BurnIn_Unit_1,Line-A-Maynard,BurnIn,2026-05-03,2026-07-01,Active,v2.3.2
-EQ-1008,BurnIn_Unit_2,Line-A-Maynard,BurnIn,2026-03-23,2026-10-13,Active,v4.4.13
-EQ-1009,FinalTest_Unit_1,Line-A-Maynard,FinalTest,2025-12-27,2026-10-17,Active,v4.5.11
-EQ-1010,FinalTest_Unit_2,Line-A-Maynard,FinalTest,2026-02-24,2026-08-17,Active,v3.6.2
-EQ-1011,FinalTest_Unit_3,Line-A-Maynard,FinalTest,2026-01-04,2026-10-17,Active,v3.0.16
-EQ-1012,WaferTest_Unit_1,Line-B-Maynard,WaferTest,2025-11-28,2026-07-31,Active,v2.4.10
-EQ-1013,OpticalAlignment_Unit_1,Line-B-Maynard,OpticalAlignment,2026-02-27,2026-10-01,Down for Maintenance,v2.7.0
-EQ-1014,ModuleParametric_Unit_1,Line-B-Maynard,ModuleParametric,2026-01-18,2026-10-22,Active,v3.6.9
-EQ-1015,BurnIn_Unit_1,Line-B-Maynard,BurnIn,2025-12-06,2026-10-12,Active,v4.2.11
-EQ-1016,BurnIn_Unit_2,Line-B-Maynard,BurnIn,2026-02-07,2026-07-10,Active,v3.2.11
-EQ-1017,BurnIn_Unit_3,Line-B-Maynard,BurnIn,2026-02-17,2026-07-16,Needs Calibration,v2.0.4
-EQ-1018,FinalTest_Unit_1,Line-B-Maynard,FinalTest,2026-02-23,2026-08-23,Active,v3.1.0
-EQ-1019,FinalTest_Unit_2,Line-B-Maynard,FinalTest,2026-03-04,2026-08-02,Active,v3.4.6
-EQ-1020,WaferTest_Unit_1,Line-C-Lowell,WaferTest,2025-12-03,2026-09-04,Active,v4.3.16
-EQ-1021,OpticalAlignment_Unit_1,Line-C-Lowell,OpticalAlignment,2025-11-10,2026-07-31,Needs Calibration,v3.3.9
-EQ-1022,ModuleParametric_Unit_1,Line-C-Lowell,ModuleParametric,2026-04-25,2026-10-10,Active,v4.0.5
-EQ-1023,ModuleParametric_Unit_2,Line-C-Lowell,ModuleParametric,2025-12-30,2026-09-07,Active,v4.0.7
-EQ-1024,BurnIn_Unit_1,Line-C-Lowell,BurnIn,2026-03-26,2026-05-07,Active,v3.7.2
-EQ-1025,BurnIn_Unit_2,Line-C-Lowell,BurnIn,2025-11-15,2026-10-18,Active,v3.2.1
-EQ-1026,BurnIn_Unit_3,Line-C-Lowell,BurnIn,2026-02-02,2026-09-03,Needs Calibration,v4.1.7
-EQ-1027,FinalTest_Unit_1,Line-C-Lowell,FinalTest,2025-11-19,2026-09-07,Active,v2.2.5
-EQ-1028,FinalTest_Unit_2,Line-C-Lowell,FinalTest,2026-02-27,2026-08-22,Down for Maintenance,v2.1.14
+EQ-1000,WaferTest_Unit_1,Line-A-Maynard,WaferTest,2026-01-17,2026-07-17,Down for Maintenance,v4.2.10
+EQ-1001,WaferTest_Unit_2,Line-A-Maynard,WaferTest,2026-02-22,2026-08-26,Down for Maintenance,v3.3.4
+EQ-1002,OpticalAlignment_Unit_1,Line-A-Maynard,OpticalAlignment,2026-03-17,2026-10-19,Active,v3.4.19
+EQ-1003,ModuleParametric_Unit_1,Line-A-Maynard,ModuleParametric,2026-06-09,2026-12-20,Active,v3.1.8
+EQ-1004,BurnIn_Unit_1,Line-A-Maynard,BurnIn,2026-01-30,2026-07-13,Active,v2.6.12
+EQ-1005,BurnIn_Unit_2,Line-A-Maynard,BurnIn,2026-06-16,2026-11-15,Needs Calibration,v2.6.15
+EQ-1006,FinalTest_Unit_1,Line-A-Maynard,FinalTest,2026-04-11,2026-08-21,Down for Maintenance,v4.1.4
+EQ-1007,FinalTest_Unit_2,Line-A-Maynard,FinalTest,2026-03-23,2026-10-11,Active,v2.6.17
+EQ-1008,FinalTest_Unit_3,Line-A-Maynard,FinalTest,2026-03-25,2026-09-28,Active,v2.6.5
+EQ-1009,WaferTest_Unit_1,Line-B-Maynard,WaferTest,2026-02-13,2026-09-19,Active,v4.5.12
+EQ-1010,WaferTest_Unit_2,Line-B-Maynard,WaferTest,2026-03-14,2026-12-27,Needs Calibration,v3.1.19
+EQ-1011,OpticalAlignment_Unit_1,Line-B-Maynard,OpticalAlignment,2026-02-21,2026-09-03,Active,v4.1.9
+EQ-1012,OpticalAlignment_Unit_2,Line-B-Maynard,OpticalAlignment,2026-02-02,2026-08-09,Active,v3.3.9
+EQ-1013,OpticalAlignment_Unit_3,Line-B-Maynard,OpticalAlignment,2026-05-02,2026-09-08,Active,v3.6.12
+EQ-1014,ModuleParametric_Unit_1,Line-B-Maynard,ModuleParametric,2026-04-27,2026-07-31,Down for Maintenance,v2.3.13
+EQ-1015,ModuleParametric_Unit_2,Line-B-Maynard,ModuleParametric,2026-02-28,2026-11-19,Down for Maintenance,v3.8.1
+EQ-1016,ModuleParametric_Unit_3,Line-B-Maynard,ModuleParametric,2026-02-24,2026-11-05,Active,v2.6.14
+EQ-1017,BurnIn_Unit_1,Line-B-Maynard,BurnIn,2026-02-14,2026-07-19,Active,v4.7.8
+EQ-1018,BurnIn_Unit_2,Line-B-Maynard,BurnIn,2026-02-27,2026-09-03,Needs Calibration,v3.0.17
+EQ-1019,BurnIn_Unit_3,Line-B-Maynard,BurnIn,2026-01-06,2026-08-14,Needs Calibration,v3.5.16
+EQ-1020,FinalTest_Unit_1,Line-B-Maynard,FinalTest,2026-05-06,2026-12-23,Active,v4.6.5
+EQ-1021,FinalTest_Unit_2,Line-B-Maynard,FinalTest,2026-03-22,2026-09-10,Down for Maintenance,v2.5.15
+EQ-1022,WaferTest_Unit_1,Line-C-Lowell,WaferTest,2026-05-30,2026-07-12,Active,v4.1.6
+EQ-1023,OpticalAlignment_Unit_1,Line-C-Lowell,OpticalAlignment,2026-06-28,2026-12-08,Active,v3.1.14
+EQ-1024,OpticalAlignment_Unit_2,Line-C-Lowell,OpticalAlignment,2026-04-11,2026-08-11,Needs Calibration,v4.3.15
+EQ-1025,ModuleParametric_Unit_1,Line-C-Lowell,ModuleParametric,2026-05-06,2026-10-05,Active,v3.4.19
+EQ-1026,ModuleParametric_Unit_2,Line-C-Lowell,ModuleParametric,2026-05-02,2026-12-26,Active,v2.4.13
+EQ-1027,BurnIn_Unit_1,Line-C-Lowell,BurnIn,2026-03-03,2026-12-29,Down for Maintenance,v4.3.4
+EQ-1028,FinalTest_Unit_1,Line-C-Lowell,FinalTest,2026-04-15,2026-10-16,Active,v2.2.3
+EQ-1029,FinalTest_Unit_2,Line-C-Lowell,FinalTest,2026-04-09,2026-12-21,Active,v2.7.12

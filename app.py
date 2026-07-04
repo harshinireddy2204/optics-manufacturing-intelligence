@@ -19,7 +19,7 @@ JD Coverage Map:
 ─────────────────────────────────────────────────────────────────
 
 Author: Harshini Reddy
-Context: Cisco/Acacia Optics Operations - 800G/1.6T Coherent Pluggable Manufacturing
+Context: Cisco/Acacia Optics Operations - 800G Coherent (ZR/ZR+) + 1.6T Client PAM4 Manufacturing
 """
 
 import streamlit as st
@@ -134,7 +134,7 @@ df_raw, df_equip, df_targets, SPEC_LIMITS = load_data()
 with st.sidebar:
     st.markdown("## 🔬 Optics Ops Intelligence")
     st.markdown("**Cisco / Acacia Communications**")
-    st.markdown("800G · 1.6T Coherent Pluggables")
+    st.markdown("Coherent ZR/ZR+ · Client PAM4 (1.6T)")
     st.divider()
 
     # Filters
@@ -148,12 +148,28 @@ with st.sidebar:
         options=sorted(df_raw["manufacturing_line"].unique()),
         default=sorted(df_raw["manufacturing_line"].unique()),
     )
-    date_range = st.date_input(
+    # Flexible date range: quick presets plus a custom picker.
+    _data_min = df_raw["test_datetime"].min().date()
+    _data_max = df_raw["test_datetime"].max().date()
+    range_preset = st.selectbox(
         "Date Range",
-        value=(df_raw["test_datetime"].min().date(), df_raw["test_datetime"].max().date()),
-        min_value=df_raw["test_datetime"].min().date(),
-        max_value=df_raw["test_datetime"].max().date(),
+        ["Full history", "Last 7 days", "Last 14 days", "Last 30 days", "Last 90 days", "Custom"],
+        index=0,
     )
+    if range_preset == "Custom":
+        date_range = st.date_input(
+            "Custom range",
+            value=(_data_min, _data_max),
+            min_value=_data_min,
+            max_value=_data_max,
+        )
+    elif range_preset == "Full history":
+        date_range = (_data_min, _data_max)
+    else:
+        _preset_days = {"Last 7 days": 7, "Last 14 days": 14, "Last 30 days": 30, "Last 90 days": 90}
+        _start = max(_data_min, _data_max - timedelta(days=_preset_days[range_preset]))
+        date_range = (_start, _data_max)
+        st.caption(f"{_start:%b %d, %Y} to {_data_max:%b %d, %Y}")
 
     st.divider()
     st.markdown("""
@@ -226,11 +242,12 @@ def yield_rate(data, lsl, usl):
 
 
 # ── Tabs ─────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📊 Executive Summary",
     "🧹 Data Quality & Hygiene",
     "📈 Yield & SPC Analysis",
     "🏭 Manufacturing Line Monitor",
+    "🚀 1.6T NPI Ramp",
     "🔍 SQL & ETL Patterns",
 ])
 
@@ -325,8 +342,11 @@ with tab1:
     <span class='jd-tag'>JD: PROCESS CONTROL</span>
     """, unsafe_allow_html=True)
 
-    params = ["tx_optical_power_dBm", "rx_sensitivity_dBm", "extinction_ratio_dB",
-              "osnr_dB", "tdecq_dB", "insertion_loss_dB", "eye_margin_pct", "dsp_lock_time_ms"]
+    # Shared parameters only, so the cross-line heatmap stays valid regardless of
+    # which product family is filtered (coherent-only and PAM4-only metrics are
+    # shown in the SPC control-chart selector above and the NPI Ramp tab).
+    params = ["tx_optical_power_dBm", "rx_sensitivity_dBm", "insertion_loss_dB",
+              "dsp_lock_time_ms", "wavelength_offset_pm", "module_power_W"]
 
     cpk_matrix = []
     for line in sorted(df["manufacturing_line"].unique()):
@@ -522,17 +542,20 @@ with tab3:
 
     # ── Parameter Selection ──────────────────────────────────────────────
     param_names = {
-        "tx_optical_power_dBm": "Tx Optical Power (dBm)",
-        "rx_sensitivity_dBm": "Rx Sensitivity (dBm)",
-        "extinction_ratio_dB": "Extinction Ratio (dB)",
-        "osnr_dB": "OSNR (dB)",
-        "tdecq_dB": "TDECQ (dB)",
-        "wavelength_offset_pm": "Wavelength Offset (pm)",
-        "module_power_W": "Module Power (W)",
-        "insertion_loss_dB": "Insertion Loss (dB)",
-        "eye_margin_pct": "Eye Margin (%)",
-        "dsp_lock_time_ms": "DSP Lock Time (ms)",
-        "laser_bias_current_mA": "Laser Bias Current (mA)",
+        "tx_optical_power_dBm": "Tx Optical Power (dBm)  [both]",
+        "rx_sensitivity_dBm": "Rx Sensitivity (dBm)  [both]",
+        "pre_fec_ber": "Pre-FEC BER  [both]",
+        "osnr_dB": "OSNR (dB)  [coherent]",
+        "q_factor_dB": "Q-factor (dB)  [coherent]",
+        "chromatic_dispersion_ps_nm": "Residual Chromatic Dispersion (ps/nm)  [coherent]",
+        "tdecq_dB": "TDECQ (dB)  [client PAM4]",
+        "extinction_ratio_dB": "Extinction Ratio (dB)  [client PAM4]",
+        "eye_margin_pct": "Eye Margin (%)  [client PAM4]",
+        "wavelength_offset_pm": "Wavelength Offset (pm)  [both]",
+        "module_power_W": "Module Power (W)  [both]",
+        "insertion_loss_dB": "Insertion Loss (dB)  [both]",
+        "dsp_lock_time_ms": "DSP Lock Time (ms)  [both]",
+        "laser_bias_current_mA": "Laser Bias Current (mA)  [both]",
     }
 
     selected_param = st.selectbox(
@@ -805,9 +828,9 @@ with tab4:
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# TAB 5: SQL & ETL Patterns
+# TAB 6: SQL & ETL Patterns
 # ═══════════════════════════════════════════════════════════════════════════
-with tab5:
+with tab6:
     st.markdown("# SQL & ETL Patterns for Optics Data")
     st.markdown("""
     <span class='jd-tag'>JD: SQL QUERIES/VIEWS/STORED PROCEDURES</span>
@@ -1093,6 +1116,143 @@ class OpticsDataPipeline:
     </div>
     """, unsafe_allow_html=True)
 
+# ═══════════════════════════════════════════════════════════════════════════
+# TAB 5: 1.6T NPI Ramp (yield learning curve + loss Pareto + power efficiency)
+# ═══════════════════════════════════════════════════════════════════════════
+with tab5:
+    st.markdown("# 1.6T NPI Ramp: Yield Learning Curve")
+    st.markdown("""
+    <span class='jd-tag'>JD: YIELD ANALYSIS</span>
+    <span class='jd-tag'>JD: TREND DETECTION</span>
+    <span class='jd-tag'>JD: MANAGEMENT DECISION-MAKING</span>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    The **1.6T-DR8 line (Kibo PAM4 DSP)** is a new-product introduction ramping through the
+    production window. New optical products start at low first-pass yield and climb a *learning
+    curve* as the process matures. During a ramp this is the view a product line data analyst
+    lives in: is yield converging toward the mature target, and what is holding it back?
+    *(This tab reads the full production window, independent of the sidebar filters.)*
+    """)
+
+    # applicable parameters per family, derived from the spec family tags
+    def _npi_applicable(family):
+        return [p for p, s in SPEC_LIMITS.items()
+                if s.get("family") in ("both", family) and p in df_raw.columns]
+
+    # module-level first-pass yield by ISO week for a single product line
+    def _weekly_fpy(prod, family):
+        d = df_raw[df_raw["product_line"] == prod].copy()
+        inspec = pd.Series(True, index=d.index)
+        for p in _npi_applicable(family):
+            s = SPEC_LIMITS[p]
+            col = pd.to_numeric(d[p], errors="coerce")
+            ok = ((col >= s["LSL"]) & (col <= s["USL"])) | col.isna()
+            inspec &= ok
+        d["row_pass"] = inspec
+        d["week"] = d["test_datetime"].dt.to_period("W").apply(lambda r: r.start_time)
+        mod = d.groupby(["serial_number", "week"])["row_pass"].all().reset_index()
+        wk = mod.groupby("week")["row_pass"].agg(fpy="mean", modules="count").reset_index()
+        wk["fpy"] *= 100
+        return wk
+
+    NPI_PROD = "1.6T-DR8-OSFP"
+    REF_PROD = "800G-ZR-QSFP-DD"
+    MATURE_TARGET = 96.0
+
+    npi_wk = _weekly_fpy(NPI_PROD, "Client-PAM4")
+    ref_wk = _weekly_fpy(REF_PROD, "Coherent")
+
+    if len(npi_wk) >= 2:
+        start_fpy = npi_wk["fpy"].iloc[0]
+        current_fpy = npi_wk["fpy"].iloc[-1]
+        gain = current_fpy - start_fpy
+        gap = MATURE_TARGET - current_fpy
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric("1.6T FPY (latest week)", f"{current_fpy:.1f}%")
+        k2.metric("Ramp-start FPY", f"{start_fpy:.1f}%")
+        k3.metric("Yield gained", f"+{gain:.1f} pts")
+        k4.metric("Gap to mature target", f"{gap:.1f} pts", delta=f"target {MATURE_TARGET:.0f}%", delta_color="off")
+
+    fig_npi = go.Figure()
+    fig_npi.add_trace(go.Scatter(
+        x=npi_wk["week"], y=npi_wk["fpy"], mode="lines+markers",
+        name="1.6T-DR8 (ramping)", line=dict(color="#d97706", width=3), marker=dict(size=7),
+    ))
+    fig_npi.add_trace(go.Scatter(
+        x=ref_wk["week"], y=ref_wk["fpy"], mode="lines+markers",
+        name="800G-ZR (mature reference)", line=dict(color="#059669", width=2, dash="dot"), marker=dict(size=5),
+    ))
+    fig_npi.add_hline(y=MATURE_TARGET, line_dash="dash", line_color="#6b7280",
+                      annotation_text=f"Mature target {MATURE_TARGET:.0f}%", annotation_position="bottom right")
+    fig_npi.update_layout(
+        height=420, margin=dict(t=20, b=40),
+        xaxis_title="Production week", yaxis_title="First-pass yield (%)",
+        legend=dict(orientation="h", yanchor="top", y=-0.15),
+    )
+    st.plotly_chart(fig_npi, use_container_width=True)
+
+    st.divider()
+
+    # ── Yield-loss Pareto for the 1.6T line ──────────────────────────────
+    st.markdown("### What is holding 1.6T yield back? (Yield-loss Pareto)")
+    st.markdown("Ranking 1.6T-DR8 test parameters by out-of-spec reading count tells engineering exactly where to spend ramp effort.")
+    d16 = df_raw[df_raw["product_line"] == NPI_PROD]
+    prows = []
+    for p in _npi_applicable("Client-PAM4"):
+        s = SPEC_LIMITS[p]
+        col = pd.to_numeric(d16[p], errors="coerce").dropna()
+        if len(col) == 0:
+            continue
+        fails = int(((col < s["LSL"]) | (col > s["USL"])).sum())
+        if fails > 0:
+            prows.append({"parameter": p, "failures": fails})
+    pareto = pd.DataFrame(prows).sort_values("failures", ascending=False).reset_index(drop=True)
+    if not pareto.empty:
+        pareto["cum_pct"] = pareto["failures"].cumsum() / pareto["failures"].sum() * 100
+        figp = make_subplots(specs=[[{"secondary_y": True}]])
+        figp.add_trace(go.Bar(x=pareto["parameter"], y=pareto["failures"],
+                              marker_color="#0891b2", name="Out-of-spec readings"), secondary_y=False)
+        figp.add_trace(go.Scatter(x=pareto["parameter"], y=pareto["cum_pct"], mode="lines+markers",
+                                  line=dict(color="#d97706", width=2), name="Cumulative %"), secondary_y=True)
+        figp.update_layout(height=380, margin=dict(t=20, b=90),
+                           legend=dict(orientation="h", yanchor="top", y=-0.35))
+        figp.update_yaxes(title_text="Out-of-spec readings", secondary_y=False)
+        figp.update_yaxes(title_text="Cumulative %", range=[0, 105], secondary_y=True)
+        st.plotly_chart(figp, use_container_width=True)
+    else:
+        st.info("No out-of-spec 1.6T readings in the current data window.")
+
+    st.divider()
+
+    # ── Power efficiency (watts per Tbps) ────────────────────────────────
+    st.markdown("### Power efficiency: watts per Tbps")
+    st.markdown("Absolute module power rises with data rate, so the metric that matters for AI-era optics is **power per bit**. Kibo's 1.6T pitch is roughly 20% lower power than existing 1.6T parts, so tracking W/Tbps by line is how operations proves it.")
+    RATE_TBPS = {"800G-ZR-QSFP-DD": 0.8, "800G-ZR+-OSFP": 0.8, "400G-ZR+-QSFP-DD": 0.4, "1.6T-DR8-OSFP": 1.6}
+    erows = []
+    for prod, rate in RATE_TBPS.items():
+        sub = df_raw[(df_raw["product_line"] == prod) & (df_raw["test_station"] == "FinalTest")]
+        pw = pd.to_numeric(sub["module_power_W"], errors="coerce").dropna()
+        if len(pw) == 0:
+            continue
+        erows.append({"product_line": prod, "avg_power_W": round(pw.mean(), 1),
+                      "W_per_Tbps": round(pw.mean() / rate, 1)})
+    eff = pd.DataFrame(erows).sort_values("W_per_Tbps").reset_index(drop=True)
+    ce1, ce2 = st.columns([2, 1])
+    with ce1:
+        fige = px.bar(eff, x="product_line", y="W_per_Tbps",
+                      color="W_per_Tbps", color_continuous_scale="Teal_r",
+                      text="W_per_Tbps")
+        fige.update_layout(height=360, margin=dict(t=20, b=40),
+                           xaxis_title="", yaxis_title="Watts per Tbps (lower is better)",
+                           coloraxis_showscale=False)
+        st.plotly_chart(fige, use_container_width=True)
+    with ce2:
+        st.dataframe(eff, use_container_width=True, hide_index=True)
+
+
+
+
 
 # ── Footer ───────────────────────────────────────────────────────────────
 st.divider()
@@ -1101,9 +1261,9 @@ st.markdown("""
 <b>Coherent Optics Manufacturing Data Intelligence Dashboard</b><br>
 Portfolio project by Harshini Reddy - Cisco Optics Operations, Product Line Data Analyst (2011813)<br>
 Technologies: Python · pandas · Streamlit · Plotly · SQL · SPC/Six Sigma<br>
-Domain: 800G/1.6T coherent pluggable manufacturing · DSP parametrics · yield analysis<br>
+Domain: 800G coherent (ZR/ZR+) + 1.6T client PAM4 manufacturing · DSP parametrics · yield analysis<br>
 <br>
-<i>Data is synthetic but modeled on real coherent transceiver test parameters (BER, OSNR, TDECQ, optical power)
+<i>Data is synthetic but modeled on real optical transceiver test parameters (BER, OSNR, TDECQ, optical power)
 and real manufacturing challenges (multi-line variability, shift effects, process drift, data reconciliation).</i>
 </div>
 """, unsafe_allow_html=True)
